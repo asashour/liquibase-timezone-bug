@@ -35,11 +35,11 @@ class OracleTest {
 
             var changeLog = "abc.yaml";
             new CommandScope(DiffChangelogCommandStep.COMMAND_NAME)
-            .addArgumentValue(ReferenceDbUrlConnectionCommandStep.REFERENCE_DATABASE_ARG, refDb)
-            .addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, targetDb)
-            .addArgumentValue(DiffChangelogCommandStep.CHANGELOG_FILE_ARG, changeLog)
+                    .addArgumentValue(ReferenceDbUrlConnectionCommandStep.REFERENCE_DATABASE_ARG, refDb)
+                    .addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, targetDb)
+                    .addArgumentValue(DiffChangelogCommandStep.CHANGELOG_FILE_ARG, changeLog)
 
-            .execute();
+                    .execute();
 
             // output is "timestamp(6)"
         }

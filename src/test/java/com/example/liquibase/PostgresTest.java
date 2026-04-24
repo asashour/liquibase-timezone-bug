@@ -4,10 +4,15 @@ import liquibase.command.CommandScope;
 import liquibase.command.core.DiffChangelogCommandStep;
 import liquibase.command.core.helpers.*;
 import liquibase.database.DatabaseFactory;
+import liquibase.database.core.PostgresDatabase;
 import liquibase.database.jvm.JdbcConnection;
+import liquibase.datatype.DataTypeFactory;
+import liquibase.exception.DatabaseException;
+import liquibase.structure.core.DataType;
 import org.junit.jupiter.api.Test;
 
 import java.sql.DriverManager;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,11 +34,22 @@ class PostgresTest {
 
             var changeLog = "abc.yaml";
             new CommandScope(DiffChangelogCommandStep.COMMAND_NAME)
-            .addArgumentValue(ReferenceDbUrlConnectionCommandStep.REFERENCE_DATABASE_ARG, refDb)
-            .addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, targetDb)
-            .addArgumentValue(DiffChangelogCommandStep.CHANGELOG_FILE_ARG, changeLog)
+                    .addArgumentValue(ReferenceDbUrlConnectionCommandStep.REFERENCE_DATABASE_ARG, refDb)
+                    .addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, targetDb)
+                    .addArgumentValue(DiffChangelogCommandStep.CHANGELOG_FILE_ARG, changeLog)
 
-            .execute();
+                    .execute();
+
+            // output is "timestamp"
+        }
+    }
+
+    @Test
+    void factory() throws DatabaseException {
+        try (var db = new PostgresDatabase()) {
+            var type = new DataType("timestamptz");
+            var output = DataTypeFactory.getInstance().from(type, db).toString();
+            assertTrue(output.toLowerCase(Locale.ROOT).contains("zone"));
         }
     }
 }
